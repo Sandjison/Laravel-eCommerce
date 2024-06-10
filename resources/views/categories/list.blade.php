@@ -23,7 +23,7 @@
                 
                     <div class="alert alert-success">
                         <p>{{ $category->name }}</p>
-                        <a href="{{ route('category.edit', $category->id) }}" class="btn btn-primary" onclick="return confirm('Êtes vous sùre de vouloir modifier cette categorie?')" >Modifier</a>
+                        <a href="{{ route('category.edit', $category->id) }}" class="btn btn-success" onclick="return confirm('Êtes vous sùre de vouloir modifier cette categorie?')" >Modifier</a>
 
                         <a href="{{ route('category.destroy', $category->id) }}" class="btn btn-danger" onclick="return confirm('Êtes vous sùre de vouloir supprimer cette categorie?')" >Supprimer</a>
                     </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\URL;
 
 class ProductController extends Controller
 {
@@ -13,8 +14,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all(); 
-        return view("products.list", ["products"=>$products]);
+        $products = Product::all();
+        return view("products.list", ["products" => $products]);
     }
 
     /**
@@ -24,7 +25,7 @@ class ProductController extends Controller
     {
         $categories = Category::all();
         return view("products.create", [
-            "categories"=> $categories
+            "categories" => $categories
         ]);
     }
 
@@ -33,15 +34,21 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product();
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->category_id = $request->category_id;
-        $product->file ="";
-        $product->save();
-
-        return back()->with('success', 'Produit ajouté avec succès');
+            $product = new Product();
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->category_id = $request->category_id;
+            if ($request->hasFile("file")) {
+                move_uploaded_file($_FILES['file']['tmp_name'], 'db/products/' . $_FILES['file']['name']);
+                $product->file = $_FILES['file']['name'];
+            } else {
+                $product->file = '';
+            }
+            $product->save();
+    
+            return back()->with('success', 'Produit ajouté avec succès');
+        
     }
 
     /**
@@ -58,11 +65,12 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         $product = Product::find($id);
+        $categories = Category::all();
         return view("products.edit", [
-            "product"=> $product
-        
-        ]);
+            "product" => $product,
+            "categories"=> $categories
 
+        ]);
     }
 
     /**
@@ -74,7 +82,6 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->save();
         return redirect()->route('product.list')->with("success", "Produit mise à jour avec succès");
-        
     }
 
     /**
@@ -84,6 +91,6 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $product->delete();
-        return back()->with("success","Produit supprimée!!!");
+        return back()->with("success", "Produit supprimée!!!");
     }
 }
