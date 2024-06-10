@@ -12,8 +12,21 @@
             </div>
                 
             @endif
+            @if ($message = Session::get('success'))
+
+            <div class="alert alert-success" role="alert">
+                {{ $message }}
+            </div>
+                
+            @endif
             <form action="{{ route('product.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
+                <select name="category_id" required class="form-select">
+                    <option value="" selected>Choisir une catégorie</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
                 <label for="name">Nom du produit</label>
                 <input type="text" class="form-control" id="name" name="name" placeholder="Saisir le nom du produit ici">
 
@@ -21,9 +34,9 @@
                 <input type="number" class="form-control" name="price" id="price" min="100" max="1000000" value="0">
 
                 <label for="description">Description du produit</label>
-                <textarea name="decription" id="description" placeholder="Saisir la description ici" class="form-control" rows="4" class="form-control"></textarea><br/>
+                <textarea name="description" id="description" placeholder="Saisir la description ici" class="form-control" rows="4" class="form-control"></textarea><br/>
 
-                <label for="file">Iamage de couverture</label>
+                <label for="file">Image de couverture</label>
                 <div>
                     <input type="file" name="file" id="file" placeholder="Insérer un fichier" class="form-control">
                 </div>

@@ -1,13 +1,13 @@
 @extends('layout.base')
 
 @section('content')
-    <form action="{{ route('category.update', $category->id) }}" method="POST" class="mt-5">
+    <form action="{{ route('product.update', $product->id) }}" method="POST" class="mt-5">
         @csrf
         <div class="container-fluid row">
             <div class="col-xl-4"></div>
             <div class="col-xl-4">
                 <div class="form-floating">
-                    <input type="text" value="{{ $category->name }}" class="form-control" placeholder="Entrer le nouveau nom de la catégorie" required name="name">
+                    <input type="text" value="{{ $product->name }}" class="form-control" placeholder="Entrer le nouveau nom du produit" required name="name">
                     <label for="">Modifier</label>
                 
                 </div>

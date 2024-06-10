@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Product;
 
 class ProductController extends Controller
 {
@@ -11,7 +13,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view("products.list");
+        $products = Product::all(); 
+        return view("products.list", ["products"=>$products]);
     }
 
     /**
@@ -19,7 +22,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view("products.create");
+        $categories = Category::all();
+        return view("products.create", [
+            "categories"=> $categories
+        ]);
     }
 
     /**
@@ -27,7 +33,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        return back()-with('error', 'Un produit du même nom existe déjà.');
+        $product = new Product();
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->price = $request->price;
+        $product->category_id = $request->category_id;
+        $product->file ="";
+        $product->save();
+
+        return back()->with('success', 'Produit ajouté avec succès');
     }
 
     /**
@@ -43,7 +57,12 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Product::find($id);
+        return view("products.edit", [
+            "product"=> $product
+        
+        ]);
+
     }
 
     /**
@@ -51,7 +70,11 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $product = Product::find($id);
+        $product->name = $request->name;
+        $product->save();
+        return redirect()->route('product.list')->with("success", "Produit mise à jour avec succès");
+        
     }
 
     /**
@@ -59,6 +82,8 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::find($id);
+        $product->delete();
+        return back()->with("success","Produit supprimée!!!");
     }
 }
